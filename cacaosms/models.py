@@ -278,7 +278,7 @@ class SMSConfiguration(SingletonModel):
     SMSBackend = models.CharField(max_length=32, default='dummy', choices=(('dummy', 'Dummy'), ('mail', 'E-mail'), ('twilio', 'Twilio'), ('nexmo', 'Nexmo'), ('plivo', 'Plivo')))
 
     def __str__(self):
-        return u"SMS Configuration"
+        return u"Configuración SMS"
 
     class Meta:
-        verbose_name = "SMS Configuration"
+        verbose_name = "Configuración SMS"
