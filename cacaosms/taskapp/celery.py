@@ -37,22 +37,8 @@ def add(x, y):
     return x + y
 
 
-from twilio.rest import TwilioRestClient
+from cacaosms.backends import send_sms
 
 @app.task
-def send_sms(phone_number_to, message, from_str=None, to_str=None, id_str=None):
-    from cacaosms.models import Bitacora
-    account_sid = settings.SMS_ACCOUNT_SID
-    auth_token = settings.SMS_AUTH_TOKEN
-    phone_number_from = settings.SMS_PHONE_NUMBER
-    status_callback = settings.SMS_STATUS_CALLBACK
-
-    if from_str and to_str and id_str:
-        entrada = Bitacora(de=from_str, para=to_str, de_numero=phone_number_from, para_numero=phone_number_to, envio_id=id_str, mensaje=message)
-    else:
-        entrada = Bitacora(de_numero=phone_number_from, para_numero=phone_number_to, mensaje=message)
-    entrada.save()
-    status_callback = "%s/%s" % (settings.SMS_STATUS_CALLBACK, entrada.id)
-
-    client = TwilioRestClient(account_sid, auth_token)
-    message = client.messages.create(to=phone_number_to, from_=phone_number_from, body=message, status_callback=status_callback)
+def send_sms_task(phone_number_to, message, from_str=None, to_str=None, id_str=None):
+    send_sms(phone_number_to, message, from_str, to_str, id_str)

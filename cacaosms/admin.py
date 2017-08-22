@@ -143,6 +143,12 @@ class PermisosAdmin(admin.ModelAdmin):
 admin.site.register(Permisos, PermisosAdmin)
 
 
+class BackendAdmin(admin.ModelAdmin):
+    list_display = ['nombre','descripcion',]
+
+admin.site.register(Backend, BackendAdmin)
+
+
 # SMS Configuration using django-solo
 from solo.admin import SingletonModelAdmin
 admin.site.register(SMSConfiguration, SingletonModelAdmin)

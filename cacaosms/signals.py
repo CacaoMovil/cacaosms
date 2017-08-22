@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from cacaosms.taskapp.celery import send_sms
+from cacaosms.taskapp.celery import send_sms_task
 from cacaosms.models import Envios, Contacto
 
 
@@ -24,12 +24,12 @@ def send_sms_to_queue(sender, instance, **kwargs):
     #
     if instance.para:
         #task = send_sms.delay(para, instance.message, from_str=instance.de, to_str=para, id_str=instance.pk)
-        task = send_sms.apply_async((para, instance.message), {'from_str': instance.de, 'to_str': para, 'id_str': instance.pk}, eta=when)
+        task = send_sms_task.apply_async((para, instance.message), {'from_str': instance.de, 'to_str': para, 'id_str': instance.pk}, eta=when)
 
     if instance.para_contacto:
         contact = instance.para_contacto
         #task = send_sms.delay(contact.full_number, instance.message, from_str=instance.de, to_str=para, id_str=instance.pk)
-        task = send_sms.apply_async((contact.full_number, instance.message), {'from_str': instance.de, 'to_str': para, 'id_str': instance.pk}, eta=when)
+        task = send_sms_task.apply_async((contact.full_number, instance.message), {'from_str': instance.de, 'to_str': para, 'id_str': instance.pk}, eta=when)
 
     #
     # apply / combine filters
@@ -42,7 +42,7 @@ def send_sms_to_queue(sender, instance, **kwargs):
         contacts = contacts.filter(pais=instance.para_pais)
 
     if instance.para_grupo:
-        contacts =contacts.filter(grupo=instance.para_grupo)
+        contacts = contacts.filter(grupo=instance.para_grupo)
 
     for contact in contacts:
-        task = send_sms.apply_async((contact.full_number, instance.message), {'from_str': instance.de, 'to_str': para, 'id_str': instance.pk}, eta=when)
+        task = send_sms_task.apply_async((contact.full_number, instance.message), {'from_str': instance.de, 'to_str': para, 'id_str': instance.pk}, eta=when)

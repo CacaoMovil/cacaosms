@@ -271,11 +271,33 @@ class Permisos(models.Model):
         return "%s : %s" % (self.user, self.nombre, )
 
 
+@python_2_unicode_compatible
+class Backend(models.Model):
+
+    nombre = models.CharField(max_length=100, verbose_name=u"Nombre", primary_key=True)
+    descripcion = models.CharField(max_length=256, verbose_name=u"Descripción")
+    key = models.CharField(max_length=256, verbose_name=u"Llave",  blank=True, null=True)
+    secret = models.CharField(max_length=256, verbose_name=u"Secreto",  blank=True, null=True)
+    phone = models.CharField(max_length=256, verbose_name=u"De", blank=True, null=True)
+    callback = models.CharField(max_length=256, verbose_name=u"Callback", blank=True, null=True)
+    url = models.CharField(max_length=256, verbose_name=u"URL", blank=True, null=True)
+
+
+    class Meta:
+        ordering = ['nombre',]
+        verbose_name = _(u'Backend')
+        verbose_name_plural = _(u'Backends')
+
+
+    def __str__(self):
+        return self.descripcion
+
+
 from solo.models import SingletonModel
 
 @python_2_unicode_compatible
 class SMSConfiguration(SingletonModel):
-    SMSBackend = models.CharField(max_length=32, default='dummy', choices=(('dummy', 'Dummy'), ('mail', 'E-mail'), ('twilio', 'Twilio'), ('nexmo', 'Nexmo'), ('plivo', 'Plivo')))
+    SMSBackend = models.ForeignKey(Backend, null=True)
 
     def __str__(self):
         return u"Configuración SMS"
