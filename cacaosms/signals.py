@@ -34,15 +34,18 @@ def send_sms_to_queue(sender, instance, **kwargs):
     #
     # apply / combine filters
     #
-    contacts = Contacto.objects.all()
-    if instance.para_contactotipo:
-        contacts = Contacto.objects.filter(contactotipo=instance.para_contactotipo)
+    if instance.para_contactotipo or instance.para_pais or instance.para_grupo:
 
-    if instance.para_pais:
-        contacts = contacts.filter(pais=instance.para_pais)
+        contacts = Contacto.objects.all()
 
-    if instance.para_grupo:
-        contacts = contacts.filter(grupo=instance.para_grupo)
+        if instance.para_contactotipo:
+            contacts = Contacto.objects.filter(contactotipo=instance.para_contactotipo)
 
-    for contact in contacts:
-        task = send_sms_task.apply_async((contact.full_number, instance.message), {'from_str': instance.de, 'to_str': para, 'id_str': instance.pk}, eta=when)
+        if instance.para_pais:
+            contacts = contacts.filter(pais=instance.para_pais)
+
+        if instance.para_grupo:
+            contacts = contacts.filter(grupo=instance.para_grupo)
+
+        for contact in contacts:
+            task = send_sms_task.apply_async((contact.full_number, instance.message), {'from_str': instance.de, 'to_str': para, 'id_str': instance.pk}, eta=when)
