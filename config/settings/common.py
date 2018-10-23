@@ -21,6 +21,13 @@ env.read_env()
 # APP CONFIGURATION
 # ------------------------------------------------------------------------------
 DJANGO_APPS = (
+
+    # django-admin-tools require this to be first
+    'admin_tools',
+    'admin_tools.theming',
+    'admin_tools.menu',
+    'admin_tools.dashboard',
+
     # Default Django apps:
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,6 +50,8 @@ THIRD_PARTY_APPS = (
     'import_export', # import / export from admin
     #'django_celery_beat', # django cron
     'solo',
+    #'admin_tools_stats',
+    #'django_nvd3',
 )
 
 # Apps specific for this project go here.
@@ -151,6 +160,7 @@ TEMPLATES = [
             'loaders': [
                 'django.template.loaders.filesystem.Loader',
                 'django.template.loaders.app_directories.Loader',
+                'admin_tools.template_loaders.Loader',
             ],
             # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-context-processors
             'context_processors': [

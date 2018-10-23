@@ -51,11 +51,36 @@ admin.site.register(Grupo, GrupoAdmin)
 
 
 
+from django.db.models.functions import Trunc
+from django.db.models import DateTimeField
+
 class BitacoraAdmin(admin.ModelAdmin):
     list_display = ['de','para','mensaje','fecha_envio',]
     list_filter = ('de','para','fecha_envio',)
     readonly_fields = ('fecha_envio',)
 
+    def changelist_view(self, request, extra_context=None):
+        summary_over_time = qs.annotate(
+            period=Trunc(
+                'created',
+                'day',
+                output_field=DateTimeField(),
+            ),
+        ).values('period').annotate(total=Sum('price')).order_by('period')
+        summary_range = summary_over_time.aggregate(
+            low=Min('total'),
+            high=Max('total'),
+        )
+        high = summary_range.get('high', 0)
+        low = summary_range.get('low', 0)
+        response.context_data['summary_over_time'] = [{
+            'period': x['period'],
+            'total': x['total'] or 0,
+            'pct': \
+               ((x['total'] or 0) - low) / (high - low) * 100 
+               if high > low else 0,
+        } for x in summary_over_time]
+        return response
 admin.site.register(Bitacora, BitacoraAdmin)
 
 

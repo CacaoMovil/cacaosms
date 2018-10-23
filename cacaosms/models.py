@@ -303,4 +303,4 @@ class SMSConfiguration(SingletonModel):
         return u"Configuración SMS"
 
     class Meta:
-        verbose_name = "Configuración SMS"
+        verbose_name = u"Configuración SMS"
