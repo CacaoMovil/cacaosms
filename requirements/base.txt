@@ -54,3 +54,5 @@ django-celery-results==1.0.1
 django-import-export==0.5.1
 flower==0.9.1
 django-solo
+django-admin-tools==0.8.1
+django-admin-tools-stats==0.9.0
