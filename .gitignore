@@ -157,3 +157,6 @@ ENV/
 # javier stuff
 env.sh
 *.pid
+
+# bower
+components/bower_components

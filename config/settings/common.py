@@ -50,8 +50,9 @@ THIRD_PARTY_APPS = (
     'import_export', # import / export from admin
     #'django_celery_beat', # django cron
     'solo',
-    #'admin_tools_stats',
-    #'django_nvd3',
+    'djangobower',
+    'admin_tools_stats',
+    'django_nvd3',
 )
 
 # Apps specific for this project go here.
@@ -198,6 +199,7 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'djangobower.finders.BowerFinder',
 )
 
 # MEDIA CONFIGURATION
@@ -275,9 +277,28 @@ else:
 # Location of root django.contrib.admin URL, use {% url 'admin:index' %}
 ADMIN_URL = r'^admin/'
 
+
+
 # Your common stuff: Below this line define 3rd party library settings
 # ------------------------------------------------------------------------------
+
+# SMS tokens
 SMS_ACCOUNT_SID = env('SMS_ACCOUNT_SID')
 SMS_AUTH_TOKEN = env('SMS_AUTH_TOKEN')
 SMS_PHONE_NUMBER = env('SMS_PHONE_NUMBER')
 SMS_STATUS_CALLBACK = env('SMS_STATUS_CALLBACK')
+
+# Bower stuff
+# Specifie path to components root (you need to use absolute path)
+BOWER_COMPONENTS_ROOT = str(ROOT_DIR.path('components'))
+
+BOWER_INSTALLED_APPS = (
+    'jquery#2.0.3',
+    'jquery-ui#~1.10.3',
+    'd3#3.3.6',
+    'nvd3#1.1.12-beta',
+)
+
+# django admin tools
+ADMIN_TOOLS_INDEX_DASHBOARD = 'cacaosms.dashboard.CustomIndexDashboard'
+ADMIN_TOOLS_APP_INDEX_DASHBOARD = 'cacaosms.dashboard.CustomAppIndexDashboard'
